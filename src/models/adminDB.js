@@ -1,19 +1,22 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator')
-const admin = require('./adminDB')
 
 
 let rolesValidos = {
-    values: ['PATIENT'],
+    values: ['ADMIN'],
     message: '{VALUE} no es un rol valido'
 }
 let docValidos = {
-    values: ['CC', 'TI', 'RC'],
+    values: ['CC'],
     message: '{VALUE} no es un tipo de documento valido'
+}
+let especValidos = {
+    values: ['Gereral', 'Secretario', 'Doctor', 'Enfermero'],
+    message: '{VALUE} no es una especializacion valida'
 }
 
 let Schema = mongoose.Schema;
-let usuarioSchema = new Schema({
+let adminSchema = new Schema({
     nombres: {
         type: String,
         required: [true, 'Los nombres son nesesarios']
@@ -26,6 +29,12 @@ let usuarioSchema = new Schema({
         type: String,
         default: 'CC',
         doc: docValidos,
+        required: true
+    },
+    especializacion: {
+        type: String,
+        default: 'General',
+        role: especValidos,
         required: true
     },
     identificacion: {
@@ -44,7 +53,7 @@ let usuarioSchema = new Schema({
     },
     role: {
         type: String,
-        default: 'PATIENT',
+        default: 'ADMIN',
         role: rolesValidos,
         required: true
     },
@@ -58,14 +67,13 @@ let usuarioSchema = new Schema({
     }
 });
 
-usuarioSchema.methods.toJSON = function() {
+adminSchema.methods.toJSON = function() {
     let user = this;
     let userObject = user.toObject();
     delete userObject.password;
     return userObject;
 }
 
-usuarioSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser unico' })
+adminSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser unico' })
 
-
-module.exports = mongoose.model('Usuario', usuarioSchema);
+module.exports = mongoose.model('admin', adminSchema);

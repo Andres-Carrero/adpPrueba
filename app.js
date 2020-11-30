@@ -8,7 +8,7 @@ const app = express();
 require('./src/server')
 
 //Rutas
-app.use(require('./src/routes/usuarios'))
+app.use(require('./src/routes/index'))
 
 //Body-Parser
 app.use(bodyParser.urlencoded({ extended: false }))
